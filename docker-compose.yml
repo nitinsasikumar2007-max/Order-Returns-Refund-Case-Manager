@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-docker-local-development-secret}
+      FRONTEND_ORIGIN: http://localhost:5173
+      PORT: 5000
+    volumes:
+      - ./backend/returns.db:/app/returns.db
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

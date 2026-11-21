@@ -9,7 +9,11 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE, 'returns.db')
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'change-this-secret-before-deployment')
-app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE=os.environ.get('SESSION_COOKIE_SAMESITE', 'Lax'),
+    SESSION_COOKIE_SECURE=os.environ.get('SESSION_COOKIE_SECURE', 'false').lower() == 'true'
+)
 CORS(app, supports_credentials=True, origins=os.environ.get('FRONTEND_ORIGIN', 'http://localhost:5173').split(','))
 
 ROLES = ['Customer Support Agent', 'Warehouse Inspector', 'Finance Officer', 'Returns Manager']

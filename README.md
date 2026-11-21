@@ -13,6 +13,36 @@ A full-stack demonstration application for managing retail return requests, orde
 - Python 3.10+
 - Node.js 18+ and npm
 
+## Run with Docker
+
+From the project root (the folder containing `docker-compose.yml`):
+
+```bash
+docker compose up --build
+```
+
+Open `http://localhost:5173`. The API is available at `http://localhost:5000`.
+
+To stop the containers:
+
+```bash
+docker compose down
+```
+
+The SQLite file in `backend/returns.db` is mounted into the backend container, so application data persists across restarts.
+
+## Deploy to Vercel
+
+Vercel can host the Vite frontend. The Flask API needs to be deployed separately to a Python host, and SQLite needs persistent storage; do not rely on Vercel's serverless filesystem for the database.
+
+1. Push this project to a GitHub repository.
+2. In Vercel, import the repository and set **Root Directory** to `frontend`.
+3. Use `npm run build` for **Build Command** and `dist` for **Output Directory**.
+4. Add the environment variable `VITE_API_URL` to the Vercel project, with the deployed API base URL, for example `https://your-api-host.example.com/api` (no trailing slash). Redeploy after setting it.
+5. On the backend host, set `SECRET_KEY` to a strong random value, `FRONTEND_ORIGIN` to your exact Vercel site origin (for example `https://your-app.vercel.app`), `SESSION_COOKIE_SAMESITE` to `None`, and `SESSION_COOKIE_SECURE` to `true`. Ensure the backend host preserves `backend/returns.db` on persistent storage.
+
+The Vercel URL will only work once the separately hosted API is running and configured. The demo credentials and orders are intended for local/demo use, not a public production deployment.
+
 ## Run locally
 
 ### 1. Start the backend
